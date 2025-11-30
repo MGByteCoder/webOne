@@ -1,11 +1,350 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>My First Public Page</title>
-  </head>
-  <body>
-    <h1>Hello from my public page!</h1>
-    <p>If you can see this rendered properly, it’s working ✅</p>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manish Gupta – iOS Engineer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-card: #0b1020;
+      --accent: #4fd1c5;
+      --text-main: #f9fafb;
+      --text-subtle: #9ca3af;
+      --border-subtle: #1f2933;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827, var(--bg));
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 960px;
+    }
+
+    .card {
+      background: rgba(11, 16, 32, 0.9);
+      border-radius: 18px;
+      padding: 28px 24px 32px;
+      border: 1px solid var(--border-subtle);
+      box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.65),
+        0 0 0 1px rgba(79, 209, 197, 0.08);
+      backdrop-filter: blur(18px);
+    }
+
+    @media (min-width: 768px) {
+      .card {
+        padding: 36px 40px 40px;
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+      }
+    }
+
+    .avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4fd1c5, #60a5fa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--bg-card);
+      margin-bottom: 18px;
+      flex-shrink: 0;
+    }
+
+    .title {
+      font-size: clamp(26px, 4vw, 32px);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--text-subtle);
+      margin-bottom: 10px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0 4px;
+    }
+
+    .pill {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(156, 163, 175, 0.35);
+      color: var(--text-subtle);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .section {
+      margin-top: 26px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-subtle);
+      margin-bottom: 10px;
+    }
+
+    .section-title span {
+      color: var(--accent);
+    }
+
+    .section-content {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #e5e7eb;
+    }
+
+    .section-content strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    li + li {
+      margin-top: 6px;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+    }
+
+    @media (min-width: 700px) {
+      .projects-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .project-card {
+      border-radius: 14px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 12px 12px 14px;
+      background: radial-gradient(circle at top left, #111827, #020617);
+    }
+
+    .project-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .project-meta {
+      font-size: 11px;
+      color: var(--text-subtle);
+      margin-bottom: 6px;
+    }
+
+    .project-desc {
+      font-size: 13px;
+      color: #d1d5db;
+      margin-bottom: 8px;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.18);
+      color: #a5f3fc;
+    }
+
+    .links-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .btn-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      text-decoration: none;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      color: #e5e7eb;
+      background: rgba(15, 23, 42, 0.9);
+      transition: transform 0.12s ease, box-shadow 0.12s ease,
+        background 0.12s ease, border-color 0.12s ease;
+    }
+
+    .btn-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 16px rgba(15, 23, 42, 0.9);
+      border-color: var(--accent);
+      background: radial-gradient(circle at top, #0f172a, #020617);
+    }
+
+    .btn-link span.icon {
+      font-size: 14px;
+    }
+
+    .footer {
+      margin-top: 22px;
+      font-size: 11px;
+      color: var(--text-subtle);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="card">
+      <header class="header">
+        <div class="avatar">M</div>
+        <div>
+          <h1 class="title">Manish Gupta</h1>
+          <p class="subtitle">
+            Senior iOS Engineer · Swift &amp; SwiftUI · Curious about AI &amp; LLMs
+          </p>
+          <div class="pill-row">
+            <span class="pill">iOS · tvOS · watchOS</span>
+            <span class="pill">Swift · SwiftUI · Combine</span>
+            <span class="pill">Architecture &amp; Performance</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="section">
+        <h2 class="section-title"><span>About</span> me</h2>
+        <div class="section-content">
+          <p>
+            I build polished, performance-focused apps in the Apple ecosystem,
+            with a focus on clear architecture, smooth UX and long-term
+            maintainability. Recently I’ve also been exploring how
+            <strong>AI and LLMs</strong> can become everyday tools for mobile
+            developers.
+          </p>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title"><span>What</span> I work with</h2>
+        <div class="section-content">
+          <ul>
+            <li>• Swift, SwiftUI, UIKit, Combine, Swift Concurrency</li>
+            <li>• Xcode Instruments, performance &amp; profiling</li>
+            <li>• Clean architecture, modularisation, testing</li>
+            <li>• Integrating REST/GraphQL APIs &amp; SDKs</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title"><span>Selected</span> projects</h2>
+        <div class="projects-grid">
+          <article class="project-card">
+            <h3 class="project-title">Sample Project One</h3>
+            <p class="project-meta">iOS · SwiftUI · Personal project</p>
+            <p class="project-desc">
+              Short one-liner about an app you’re proud of. Replace this with a real project.
+            </p>
+            <div class="project-tags">
+              <span class="tag">SwiftUI</span>
+              <span class="tag">Architecture</span>
+            </div>
+          </article>
+
+          <article class="project-card">
+            <h3 class="project-title">Sample Project Two</h3>
+            <p class="project-meta">iOS · UIKit · Side project</p>
+            <p class="project-desc">
+              Another quick highlight. Add links to App Store, GitHub, or a demo if available.
+            </p>
+            <div class="project-tags">
+              <span class="tag">UIKit</span>
+              <span class="tag">Performance</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title"><span>Find</span> me online</h2>
+        <div class="section-content">
+          <p>Best ways to reach or learn more about me:</p>
+          <div class="links-row">
+            <a class="btn-link" href="https://github.com/MGByteCoder" target="_blank">
+              <span class="icon">💻</span>
+              <span>GitHub</span>
+            </a>
+            <a class="btn-link" href="#" target="_blank">
+              <span class="icon">💼</span>
+              <span>LinkedIn</span>
+            </a>
+            <a class="btn-link" href="mailto:youremail@example.com">
+              <span class="icon">✉️</span>
+              <span>Email me</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span>© <span id="year"></span> Manish Gupta</span>
+        <span>Built with GitHub Pages</span>
+      </footer>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
 </html>
