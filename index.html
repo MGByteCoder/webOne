@@ -347,46 +347,46 @@
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
   <script>
-  // CONFIG
-  const API_KEY = "YOUR_API_KEY_HERE";         // <-- put your key here
-  const CITY = "Nashua";
-  const COUNTRY = "US";                        // e.g. US, IN, etc.
-  const UNITS = "imperial";                   // "imperial" = °F, "metric" = °C
+  // Replace this with your real Worker URL
+  const WORKER_BASE_URL = "https://weathe-api.myiosnotes.workers.dev/weather";
 
   async function fetchWeather() {
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${CITY},${COUNTRY}&units=${UNITS}&appid=${API_KEY}`;
+    const city = "Nashua";      // change if you want another default
+    const country = "US";
+    const units = "imperial";   // "imperial" for °F, "metric" for °C
+
+    const url = `${WORKER_BASE_URL}/weather?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&units=${encodeURIComponent(units)}`;
+
+    const locationEl = document.getElementById("weather-location");
+    const tempEl = document.getElementById("weather-temp");
+    const descEl = document.getElementById("weather-desc");
 
     try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Network error");
 
-      const data = await response.json();
-      
-      const locationEl = document.getElementById("weather-location");
-      const tempEl = document.getElementById("weather-temp");
-      const descEl = document.getElementById("weather-desc");
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
 
-      const temp = Math.round(data.main.temp);
-      const desc = data.weather[0].description;
+      const temp = Math.round(data.temperature);
+      const feels = Math.round(data.feels_like);
+      const desc = data.description;
 
-      locationEl.textContent = `${data.name}, ${COUNTRY}`;
-      tempEl.textContent = `Temperature: ${temp}°${UNITS === "imperial" ? "F" : "C"}`;
+      locationEl.textContent = `${data.name}, ${data.country}`;
+      tempEl.textContent = `Temperature: ${temp}°${units === "imperial" ? "F" : "C"} (feels like ${feels}°)`;
       descEl.textContent = `Conditions: ${desc}`;
-    } catch (error) {
-      console.error("Error fetching weather:", error);
-      document.getElementById("weather-location").textContent = "Unable to load weather data.";
-      document.getElementById("weather-temp").textContent = "";
-      document.getElementById("weather-desc").textContent = "";
+    } catch (err) {
+      console.error(err);
+      locationEl.textContent = "Unable to load weather.";
+      tempEl.textContent = "";
+      descEl.textContent = "";
     }
   }
 
-  // Fetch on page load
   fetchWeather();
-
-  // OPTIONAL: refresh every 10 minutes
+  // Optional refresh every 10 minutes
   setInterval(fetchWeather, 10 * 60 * 1000);
 </script>
+
 </body>
 </html>
