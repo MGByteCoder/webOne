@@ -336,21 +336,54 @@
         </div>
       </section>
       <section class="section">
-        <h2 class="section-title"><span>Live</span> weather</h2>
-        <div
-          style="
-            border-radius: 14px;
-            border: 1px solid rgba(31, 41, 55, 0.9);
-            padding: 12px 12px 14px;
-            background: radial-gradient(circle at top left, #111827, #020617);
-            margin-top: 8px;
-          "
-        >
-          <p id="weather-location" class="project-meta">Loading weather…</p>
-          <p id="weather-temp" class="project-desc"></p>
-          <p id="weather-desc" class="project-desc"></p>
-        </div>
-      </section>
+  <h2 class="section-title"><span>Live</span> weather</h2>
+
+  <!-- ZIP Input UI -->
+  <div style="margin-bottom: 10px;">
+    <input
+      id="zip-input"
+      type="text"
+      placeholder="Enter ZIP code"
+      style="
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid rgba(148, 163, 184, 0.7);
+        background: #0b1020;
+        color: #e5e7eb;
+        width: 140px;
+        margin-right: 6px;
+      "
+    />
+    <button
+      onclick="fetchWeatherByZip()"
+      style="
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid rgba(79, 209, 197, 0.9);
+        background: rgba(15, 23, 42, 0.9);
+        color: var(--accent);
+        cursor: pointer;
+      "
+    >
+      Get Weather
+    </button>
+  </div>
+
+  <!-- Weather Display -->
+  <div
+    style="
+      border-radius: 14px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 12px 12px 14px;
+      background: radial-gradient(circle at top left, #111827, #020617);
+    "
+  >
+    <p id="weather-location" class="project-meta">Enter ZIP code…</p>
+    <p id="weather-temp" class="project-desc"></p>
+    <p id="weather-desc" class="project-desc"></p>
+  </div>
+</section>
+
 
       <footer class="footer">
         <span>© <span id="year"></span> Manish Gupta</span>
@@ -363,46 +396,49 @@
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
   <script>
-  const WORKER_BASE_URL = "https://weathe-api.myiosnotes.workers.dev";
+const WORKER_BASE_URL = "https://weathe-api.myiosnotes.workers.dev";
 
-  async function fetchWeather() {
-    const city = "Nashua";      // change if you want another default
-    const country = "US";
-    const units = "imperial";   // "imperial" for °F, "metric" for °C
+async function fetchWeatherByZip() {
+  const zip = document.getElementById("zip-input").value.trim();
+  const country = "US"; // change if needed
+  const units = "imperial"; // or "metric"
 
-    const url = `${WORKER_BASE_URL}/weather?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&units=${encodeURIComponent(units)}`;
-
-    const locationEl = document.getElementById("weather-location");
-    const tempEl = document.getElementById("weather-temp");
-    const descEl = document.getElementById("weather-desc");
-
-    console.log("Calling weather URL:", url);
-
-    try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("Network error " + res.status);
-
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
-
-      const temp = Math.round(data.temperature);
-      const feels = Math.round(data.feels_like);
-      const desc = data.description;
-
-      locationEl.textContent = `${data.name}, ${data.country}`;
-      tempEl.textContent = `Temperature: ${temp}°${units === "imperial" ? "F" : "C"} (feels like ${feels}°)`;
-      descEl.textContent = `Conditions: ${desc}`;
-    } catch (err) {
-      console.error(err);
-      locationEl.textContent = "Unable to load weather.";
-      tempEl.textContent = "";
-      descEl.textContent = "";
-    }
+  if (!zip) {
+    alert("Please enter a ZIP code.");
+    return;
   }
 
-  fetchWeather();
-  setInterval(fetchWeather, 10 * 60 * 1000); // every 10 minutes
-</script>
+  const url = `${WORKER_BASE_URL}/weather?zip=${encodeURIComponent(zip)},${country}&units=${units}`;
 
+  const locationEl = document.getElementById("weather-location");
+  const tempEl = document.getElementById("weather-temp");
+  const descEl = document.getElementById("weather-desc");
+
+  locationEl.textContent = "Loading weather…";
+  tempEl.textContent = "";
+  descEl.textContent = "";
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Network error " + res.status);
+
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    const temp = Math.round(data.temperature);
+    const feels = Math.round(data.feels_like);
+    const desc = data.description;
+
+    locationEl.textContent = `${data.name}, ${data.country}`;
+    tempEl.textContent = `Temperature: ${temp}°${units === "imperial" ? "F" : "C"} (feels like ${feels}°)`;
+    descEl.textContent = `Conditions: ${desc}`;
+  } catch (err) {
+    console.error(err);
+    locationEl.textContent = "Unable to load weather.";
+    tempEl.textContent = "";
+    descEl.textContent = "";
+  }
+}
+</script>
 </body>
 </html>
