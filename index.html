@@ -347,9 +347,7 @@
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
   <script>
-  // Replace this with your real Worker URL
   const WORKER_BASE_URL = "https://weathe-api.myiosnotes.workers.dev/weather";
-
   async function fetchWeather() {
     const city = "Nashua";      // change if you want another default
     const country = "US";
@@ -382,11 +380,8 @@
       descEl.textContent = "";
     }
   }
-
   fetchWeather();
-  // Optional refresh every 10 minutes
-  setInterval(fetchWeather, 10 * 60 * 1000);
+  setInterval(fetchWeather, 10);
 </script>
-
 </body>
 </html>
