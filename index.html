@@ -364,6 +364,7 @@
   </script>
   <script>
   const WORKER_BASE_URL = "https://weathe-api.myiosnotes.workers.dev";
+
   async function fetchWeather() {
     const city = "Nashua";      // change if you want another default
     const country = "US";
@@ -375,9 +376,11 @@
     const tempEl = document.getElementById("weather-temp");
     const descEl = document.getElementById("weather-desc");
 
+    console.log("Calling weather URL:", url);
+
     try {
       const res = await fetch(url);
-      if (!res.ok) throw new Error("Network error");
+      if (!res.ok) throw new Error("Network error " + res.status);
 
       const data = await res.json();
       if (data.error) throw new Error(data.error);
@@ -396,8 +399,10 @@
       descEl.textContent = "";
     }
   }
+
   fetchWeather();
-  setInterval(fetchWeather, 10);
+  setInterval(fetchWeather, 10 * 60 * 1000); // every 10 minutes
 </script>
+
 </body>
 </html>
