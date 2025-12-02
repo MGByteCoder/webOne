@@ -383,5 +383,54 @@
   fetchWeather();
   setInterval(fetchWeather, 10);
 </script>
+
+  <script>
+  const WORKER_BASE_URL = "https://weathe-api.myiosnotes.workers.dev/weather";
+
+  async function fetchWeather() {
+    const city = "Nashua";
+    const country = "US";
+    const units = "imperial";
+
+    const url = `${WORKER_BASE_URL}/weather?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&units=${encodeURIComponent(units)}`;
+
+    const locationEl = document.getElementById("weather-location");
+    const tempEl = document.getElementById("weather-temp");
+    const descEl = document.getElementById("weather-desc");
+
+    console.log("Calling weather URL:", url);
+
+    try {
+      const res = await fetch(url);
+      console.log("Response status:", res.status);
+
+      const text = await res.text();
+      console.log("Raw response:", text);
+
+      if (!res.ok) throw new Error("Network error: " + res.status);
+
+      const data = JSON.parse(text);
+
+      if (data.error) throw new Error("API error: " + data.error);
+
+      const temp = Math.round(data.temperature);
+      const feels = Math.round(data.feels_like);
+      const desc = data.description;
+
+      locationEl.textContent = `${data.name}, ${data.country}`;
+      tempEl.textContent = `Temperature: ${temp}°${units === "imperial" ? "F" : "C"} (feels like ${feels}°)`;
+      descEl.textContent = `Conditions: ${desc}`;
+    } catch (err) {
+      console.error("Weather error:", err);
+      locationEl.textContent = "Unable to load weather.";
+      tempEl.textContent = "";
+      descEl.textContent = "";
+    }
+  }
+
+  fetchWeather();
+  setInterval(fetchWeather, 10 * 60 * 1000);
+</script>
+
 </body>
 </html>
